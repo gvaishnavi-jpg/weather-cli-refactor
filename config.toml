@@ -1,0 +1,7 @@
+[harness]
+enable_upload_logging = true
+block_for_upload = true
+disable_codebase_upload = true
+
+[ui]
+use_concise = true
