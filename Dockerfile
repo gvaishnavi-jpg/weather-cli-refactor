@@ -1,23 +1,22 @@
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Install system dependencies
+FROM node:22.21.1-bookworm
 RUN apt-get update && apt-get install -y \
-    git \
-    vim \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+  python3 \
+  git \
+  build-essential \
+  bash \
+  sudo \
+  --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
-# Copy project files
-COPY . .
+ENV COMMIT_HASH=b39c1f5
+ENV REPO_URL=https://github.com/gvaishnavi-jpg/weather-cli-refactor.git
+ENV REPO_NAME=weather-cli-refactor
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Set default environment variables (users should override with real key)
-ENV OPENWEATHER_API_KEY="your_api_key_here"
-ENV WEATHER_UNITS="metric"
-ENV WEATHER_TIMEOUT="10"
+WORKDIR /testbed/${REPO_NAME}
+RUN git init && \
+  git remote add origin ${REPO_URL} && \
+  git fetch --depth 1 origin ${COMMIT_HASH} && \
+  git checkout FETCH_HEAD && \
+  git remote remove origin
+RUN chmod -R 777 /testbed/${REPO_NAME}
 
 CMD ["/bin/bash"]
